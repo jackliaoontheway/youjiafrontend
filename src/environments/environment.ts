@@ -6,7 +6,7 @@ export const environment = {
     production: false,
     hmr       : false,
     enableLog : true,
-    baseUrl   : 'http://localhost:8080/dragoncargo'
+    baseUrl   : 'http://localhost:8080/youjiabackend'
 };
 
 /*
