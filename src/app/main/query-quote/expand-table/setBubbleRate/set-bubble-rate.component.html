@@ -1,0 +1,51 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-0 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="bubbleForm">
+            <div fxLayout="row" fxLayoutAlign="start start" *ngFor="let fSpec of fSpecs">
+                <ng-container [ngSwitch]="fSpec.inputType" >
+<!--                     &lt;!&ndash; 单选按钮，选项数量是1-3个使用的编辑控件 &ndash;&gt;-->
+<!--                    <ng-container *ngSwitchCase="'radio'">-->
+<!--                        <div fxLayout="row" fxLayoutAlign="space-around center" fxFlex>-->
+<!--                            <label style="width:40%; margin-right: 10px;">{{fSpec.label}}</label>-->
+<!--                            <mat-radio-group fxFlex (change)="onSingleValueChange(fSpec, $event)">-->
+<!--                                <mat-radio-button *ngFor="let item of fSpec.selectiveItems" [value]="item.value"-->
+<!--                                                  [checked]="item.checked" style="margin: 10px;">{{item.label}}-->
+<!--                                </mat-radio-button>-->
+<!--                            </mat-radio-group>-->
+<!--                        </div>-->
+<!--                    </ng-container>-->
+
+                    <!-- 一般的文本编辑，建议<50个字符的数据使用这个组件 -->
+                    <mat-form-field *ngSwitchCase="'text'" fxFlex>
+                        <mat-label>{{fSpec.label}}</mat-label>
+                        <input name="{{fSpec.name}}" [formControl]="bubbleForm.controls[fSpec.name]" matInput type="number" placeholder="{{fSpec.name}}"  min="0"/>
+                        <span matSuffix>%</span>
+                        <mat-error *ngIf="bubbleForm.controls[fSpec.name]?.invalid">{{fSpec.label}} MAX IS 100 %</mat-error>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+        <button mat-button class="save-button" (click)="matDialogRef.close(['confirm', bubbleForm, entity])" [disabled]="bubbleForm.invalid"
+                aria-label="SAVE">
+            {{ 'Model.label.confirm' | translate}}
+        </button>
+        <button mat-button class="mr-8" (click)="matDialogRef.close()" aria-label="Cancel" matTooltip="Cancel">
+            {{ 'Model.label.cancel' | translate}}
+        </button>
+    </div>
+
+</div>

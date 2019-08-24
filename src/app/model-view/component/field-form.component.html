@@ -1,0 +1,229 @@
+<div fxLayout="row" fxLayoutAlign="start start" *ngFor="let fSpec of fieldSpecs">
+    <ng-container [ngSwitch]="fSpec.inputType" *ngIf="showThisFieldForEditing(fSpec)">
+
+        <!-- 嵌入式数据的编辑方案 -->
+        <mat-expansion-panel *ngSwitchCase="'embedded'" fxFlex [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{fSpec.label}}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <form [formGroup]="modelForm.controls[fSpec.name]">
+                <field-form [entity]="entity[fSpec.name]" [modelForm]="modelForm.controls[fSpec.name]"
+                    [fieldSpecs]="fSpec.componentMetaDatas" (formValidChanged)="onFormValidChanged($event)">
+                </field-form>
+            </form>
+        </mat-expansion-panel>
+
+        <!-- 一般的文本编辑，建议<50个字符的数据使用这个组件 -->
+        <mat-form-field *ngSwitchCase="'text'" fxFlex>
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+            <input name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                [required]="!subField && fSpec.required" (change)="onValueChange()" />
+            <ng-container *ngIf="!modelForm.controls[fSpec.name].valid">
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.required">{{fSpec.label}} {{vailsRequired}}
+                </mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.minlength">{{fSpec.label}} {{vailMinlength}}
+                    {{modelForm.controls[fSpec.name].errors.minlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.maxlength">{{fSpec.label}} {{vailMaxlength}}
+                    {{modelForm.controls[fSpec.name].errors.maxlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.max">{{fSpec.label}} {{vailMinVal}}
+                    {{modelForm.controls[fSpec.name].errors.max.max}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.min">{{fSpec.label}} {{vailMaxVal}}
+                    {{modelForm.controls[fSpec.name].errors.min.min}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.email">{{fSpec.label}} {{vailEmail}}
+                    {{modelForm.controls[fSpec.name].errors.email}}</mat-error>
+            </ng-container>
+        </mat-form-field>
+
+        <!-- 在文本编辑，允许换行的数据，建议使用这个组件 -->
+        <mat-form-field *ngSwitchCase="'textarea'" fxFlex>
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+            <textarea name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                [required]="!subField && fSpec.required" (change)="onValueChange()"></textarea>
+            <ng-container *ngIf="!modelForm.controls[fSpec.name].valid">
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.required">{{fSpec.label}} {{vailsRequired}}
+                </mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.minlength">{{fSpec.label}} {{vailMinlength}}
+                    {{modelForm.controls[fSpec.name].errors.minlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.maxlength">{{fSpec.label}} {{vailMaxlength}}
+                    {{modelForm.controls[fSpec.name].errors.maxlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.max">{{fSpec.label}} {{vailMinVal}}
+                    {{modelForm.controls[fSpec.name].errors.max.max}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.min">{{fSpec.label}} {{vailMaxVal}}
+                    {{modelForm.controls[fSpec.name].errors.min.min}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.email">{{fSpec.label}} {{vailEmail}}
+                    {{modelForm.controls[fSpec.name].errors.email}}</mat-error>
+            </ng-container>
+        </mat-form-field>
+
+        <!-- 日期型数据编辑控件， 暂时没有时间的支持 -->
+        <mat-form-field *ngSwitchCase="'date'" fxFlex>
+            <input name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                [matDatepicker]="picker" placeholder="{{fSpec.label}}" [required]="!subField && fSpec.required"
+                (change)="onValueChange()">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <ng-container *ngIf="!modelForm.controls[fSpec.name].valid">
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.required">{{fSpec.label}} {{vailsRequired}}
+                </mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.minlength">{{fSpec.label}} {{vailMinlength}}
+                    {{modelForm.controls[fSpec.name].errors.minlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.maxlength">{{fSpec.label}} {{vailMaxlength}}
+                    {{modelForm.controls[fSpec.name].errors.maxlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.max">{{fSpec.label}} {{vailMinVal}}
+                    {{modelForm.controls[fSpec.name].errors.max.max}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.min">{{fSpec.label}} {{vailMaxVal}}
+                    {{modelForm.controls[fSpec.name].errors.min.min}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.email">{{fSpec.label}} {{vailEmail}}
+                    {{modelForm.controls[fSpec.name].errors.email}}</mat-error>
+            </ng-container>
+        </mat-form-field>
+
+        <!-- 电子邮件的编辑和校验框 -->
+        <mat-form-field *ngSwitchCase="'email'" fxFlex>
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+            <input name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                [required]="!subField && fSpec.required" (change)="onValueChange()">
+            <ng-container *ngIf="!modelForm.controls[fSpec.name].valid">
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.required">{{fSpec.label}} {{vailsRequired}}
+                </mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.minlength">{{fSpec.label}} {{vailMinlength}}
+                    {{modelForm.controls[fSpec.name].errors.minlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.maxlength">{{fSpec.label}} {{vailMaxlength}}
+                    {{modelForm.controls[fSpec.name].errors.maxlength.requiredLength}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.max">{{fSpec.label}} {{vailMinVal}}
+                    {{modelForm.controls[fSpec.name].errors.max.max}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.min">{{fSpec.label}} {{vailMaxVal}}
+                    {{modelForm.controls[fSpec.name].errors.min.min}}</mat-error>
+                <mat-error *ngIf="modelForm.controls[fSpec.name].errors.email">{{fSpec.label}} {{vailEmail}}
+                    {{modelForm.controls[fSpec.name].errors.email}}</mat-error>
+            </ng-container>
+        </mat-form-field>
+
+        <!-- 需要国际化编辑的字段 -->
+        <ng-container *ngSwitchCase="'textfori18n'">
+            <label class="mt-16 mr-16">{{fSpec.label}}</label>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex>
+                <ng-container *ngFor="let lang of supportLanguages">
+                    <mat-form-field>
+                        <mat-label>{{lang.label}}</mat-label>
+                        <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+                        <input name="{{fSpec.name}}" matInput #elm
+                            value="{{getLanguageResourceForEditing(fSpec, lang.key)}}"
+                            (change)="onI18nValueChange(fSpec, lang.key, elm.value)">
+                        <ng-container *ngIf="!modelForm.controls[fSpec.name].valid">
+                            <mat-error *ngIf="modelForm.controls[fSpec.name].errors.required">{{fSpec.label}}
+                                {{vailsRequired}}</mat-error>
+                            <mat-error *ngIf="modelForm.controls[fSpec.name].errors.minlength">{{fSpec.label}}
+                                {{vailMinlength}} {{modelForm.controls[fSpec.name].errors.minlength.requiredLength}}
+                            </mat-error>
+                            <mat-error *ngIf="modelForm.controls[fSpec.name].errors.maxlength">{{fSpec.label}}
+                                {{vailMaxlength}} {{modelForm.controls[fSpec.name].errors.maxlength.requiredLength}}
+                            </mat-error>
+                            <mat-error *ngIf="modelForm.controls[fSpec.name].errors.max">{{fSpec.label}} {{vailMinVal}}
+                                {{modelForm.controls[fSpec.name].errors.max.max}}</mat-error>
+                            <mat-error *ngIf="modelForm.controls[fSpec.name].errors.min">{{fSpec.label}} {{vailMaxVal}}
+                                {{modelForm.controls[fSpec.name].errors.min.min}}</mat-error>
+                            <mat-error *ngIf="modelForm.controls[fSpec.name].errors.email">{{fSpec.label}} {{vailEmail}}
+                                {{modelForm.controls[fSpec.name].errors.email}}</mat-error>
+                        </ng-container>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <!-- 自动完成框 选项数量在10个以上的使用的编辑控件 -->
+        <mat-form-field *ngSwitchCase="'autocomplete'" fxFlex>
+            <input matInput placeholder="{{fSpec.label}}" [matAutocomplete]="auto" [formControl]="myControl[fSpec.name]"
+                [required]="!subField && fSpec.required">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onAutoCompleteSelected(fSpec, $event)">
+                <mat-option *ngFor="let item of filteredOptions[fSpec.name] | async" [value]="item.label">
+                    <span>{{item.label}}</span><span hidden>,{{item.value}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- 单选下拉框 选项数量在3-10个的使用的编辑控件 -->
+        <mat-form-field *ngSwitchCase="'singleSelect'" fxFlex>
+            <mat-select placeholder="{{fSpec.label}}" [value]="getSingleSelectionInitialValue(fSpec)"
+                [required]="!subField && fSpec.required" (selectionChange)="onSingleValueChange(fSpec, $event)">
+                <mat-option *ngFor="let item of fSpec.selectiveItems" [value]="item.value">
+                    {{item.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- 多选下拉框编辑控件 -->
+        <mat-form-field *ngSwitchCase="'multipleSelect'" fxFlex>
+            <mat-select placeholder="{{fSpec.label}}" [value]="getMultipleSelectionInitialValue(fSpec)" multiple
+                [required]="!subField && fSpec.required" (selectionChange)="onMultipleValueChange(fSpec, $event)">
+                <mat-option *ngFor="let item of fSpec.selectiveItems" [value]="item.value">
+                    {{item.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- 单选按钮，选项数量是1-3个使用的编辑控件 -->
+        <ng-container *ngSwitchCase="'radio'">
+            <div fxLayout="row" fxLayoutAlign="space-around center" fxFlex>
+                <label style="width:40%; margin-right: 10px;">{{fSpec.label}}</label>
+                <mat-radio-group fxFlex [required]="!subField && fSpec.required"
+                    (change)="onSingleValueChange(fSpec, $event)">
+                    <mat-radio-button *ngFor="let item of fSpec.selectiveItems" [value]="item.value"
+                        [checked]="getCheckInitialValue(fSpec,item)" style="margin: 10px;">{{item.label}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </ng-container>
+
+        <!-- 多选按钮， 在小屏幕的时候，是单列显示， 大点的屏幕使用双列显示所有选项 -->
+        <ng-container *ngSwitchCase="'checkbox'">
+            <div fxHide fxShow.lt-sm>
+                <div fxLayout.lt-sm="row" fxLayoutAlign.lt-sm="space-around start">
+                    <div fxLayout="column" fxLayoutAlign="space-evenly start" class="mr-16">
+                        <label class="mt-16 mr-16">{{fSpec.label}}</label>
+                    </div>
+                    <div fxLayout="column" fxLayoutAlign="start stretch" class="mr-16">
+                        <mat-checkbox *ngFor="let item of fSpec.selectiveItems; index as i" [value]="item.value"
+                            [checked]="getCheckInitialValue(fSpec,item)" style="margin: 10px;"
+                            (change)="onSelectionChanged(fSpec, item.value)">{{item.label}}
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div fxShow.gt-xs="true" fxHide.xs="true">
+                <div fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-evenly start">
+                    <!-- 2 columns -->
+                    <label class="mr-16">{{fSpec.label}}</label>
+                    <div fxLayout="column" fxLayoutAlign="start stretch" class="mr-16" fxFlex>
+                        <div *ngFor="let item of fSpec.selectiveItems; even as isEven">
+                            <mat-checkbox *ngIf="isEven" [value]="item.value"
+                                [checked]="getCheckInitialValue(fSpec,item)" style="margin: 10px;"
+                                (change)="onSelectionChanged(fSpec, item.value)">{{item.label}}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                    <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex>
+                        <div *ngFor="let item of fSpec.selectiveItems; odd as isOdd">
+                            <mat-checkbox *ngIf="isOdd" [value]="item.value"
+                                [checked]="getCheckInitialValue(fSpec,item)" style="margin: 10px;"
+                                (change)="onSelectionChanged(fSpec, item.value)">{{item.label}}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- 文件型的数据，目前每个业务模型只支持同时上传一个附件， 保存在BaseModel的fileInfo中， 使用FileUploader控件实现 -->
+        <mat-form-field *ngSwitchCase="'file'" fxFlex (click)="fileInput.click()">
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">backup</mat-icon>
+            <input name="{{fSpec.name}}" [formControl]="fileNameControl" matInput readonly="true">
+        </mat-form-field>
+    </ng-container>
+    <input type="file" hidden ng2FileSelect #fileInput [uploader]="fileUploader"
+        (onFileSelected)="onFileValue(fSpec)" />
+</div>

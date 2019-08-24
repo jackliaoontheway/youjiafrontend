@@ -1,0 +1,47 @@
+<div id="quotepage" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+    <!-- 明示当前位置，以及搜索区域 -->
+    <div class="header accent p-8 p-sm-12" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+         fxLayoutAlign.gt-xs="space-between">
+        <div fxLayout="row" fxLayoutAlign="start center" style="width:100%">
+            <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                          *ngIf="modelSpec">
+                    {{modelSpec.iconName}}
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}" *ngIf="modelSpec">
+                    {{modelSpec.label}}
+                </span>
+            </div>
+            <div class="ml-sm-32" *ngIf="modelSpec && fieldSpecs && modelSpec.searchField && modelSpec.searchField.trim().length>0"
+                 fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                <div class="search-wrapper mt-16 mt-sm-0">
+                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                        <input [formControl]="searchInput" #searchElm
+                               placeholder="{{getSearchFieldLabel(modelSpec.searchField)}}"
+                               (keydown)="onKeyPress($event, searchElm)" (focus)="onFocus(searchElm)">
+                        <span fxLayout="row" fxLayoutAlign="start center" (click)="onSearch(searchElm)">
+                            <mat-icon>search</mat-icon>
+                        </span>
+                    </div>
+                </div>
+<!--                <div *ngIf="hasAdvanceSearch()">-->
+<!--                    <button mat-button class="mr-5" (click)="showHideSearchCriteriaArea()" fxLayoutAlign="start center">-->
+<!--                        <span class="ml-16" fxHide fxShow.gt-xs>{{expandText}}</span>-->
+<!--                        <mat-icon>{{expandIcon}}</mat-icon>-->
+<!--                    </button>-->
+<!--                </div>-->
+            </div>
+
+        </div>
+    </div>
+    <!-- 明示当前位置，以及搜索区域 -->
+
+    <!-- 业务模型的管理区域 -->
+    <div class="model-content center p-16 pb-24" fusePerfectScrollbar>
+        <ng-container *ngIf="modelSpec">
+            <expand-table [fieldSpecs]="fieldSpecs" [modelSpec]="modelSpec" [serviceUrl]="serviceUrl"  id="expand-table"></expand-table>
+        </ng-container>
+    </div>
+    <!-- 业务模型的管理区域 -->
+</div>
+

@@ -1,0 +1,16 @@
+<mat-toolbar matDialogTitle class="mat-accent m-0">
+    <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="title dialog-title">{{ imgTitle}}</span>
+        <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-dialog-content class="p-24 pb-0 m-0">
+  <div class="data-container">
+	  <div class="product-image">
+		  <img [src]="imgUrl">
+	  </div>
+  </div>
+</mat-dialog-content>

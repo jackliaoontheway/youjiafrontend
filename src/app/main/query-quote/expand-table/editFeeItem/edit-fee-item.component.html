@@ -1,0 +1,46 @@
+<mat-toolbar matDialogTitle class="mat-accent m-0">
+    <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="title dialog-title">{{dialogTitle}}</span>
+        <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-dialog-content class="p-0 pb-0 m-0">
+    <div class="tab-content p-0" fusePerfectScrollbar>
+        <div fxLayout="column" fxLayoutAlign="space-around stretch">
+            <div fxLayout="row" fxLayoutAlign="end center">
+                <button mat-button class="mb-16" (click)="addNewItem(fSpec);">
+                    <mat-icon>add</mat-icon>
+                    <span class="ml-16">{{ 'Model.label.add' | translate}}</span>
+                </button>
+            </div>
+            <mat-accordion [multi]='true'>
+                <mat-expansion-panel [expanded]="false" *ngFor="let subFormGroup of chargeItemForm.controls; index as i" style="margin-bottom: 5px;border: 1px solid #ddd;">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{getTitleValue(entity[fSpec.name]?entity[fSpec.name][i]:null, fSpec)}}</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <field-form [modelForm]="subFormGroup" [entity]="entity[fSpec.name]?entity[fSpec.name][i]:null" [fieldSpecs]="fSpec.componentMetaDatas"
+                                (formValidChanged)="onFormValidChanged($event)"></field-form>
+                    <mat-action-row>
+                        <button mat-button class="mr-16" (click)="onRemoveButtonClick(chargeItemForm, i)">
+                            <mat-icon>delete</mat-icon>
+                            {{ 'Model.label.remove' | translate}}
+                        </button>
+                    </mat-action-row>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button class="save-button" (click)="matDialogRef.close(['save', chargeItemForm, entity])" [disabled]="chargeItemForm.invalid"
+        aria-label="SAVE">
+        {{ 'Model.label.save' | translate}}
+    </button>
+    <button mat-button class="mr-8" (click)="matDialogRef.close()" aria-label="Cancel" matTooltip="Cancel">
+        {{ 'Model.label.cancel' | translate}}
+    </button>
+</mat-dialog-actions>

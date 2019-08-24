@@ -1,0 +1,27 @@
+@mixin myaccount-theme($theme) {
+    $background: map-get($theme, background);
+    $is-dark: map-get($theme, is-dark);
+
+    user-password {
+        #user-password {
+            #user-password-form-wrapper {
+                #user-password-form {
+                    @if ($is-dark) {
+                        background: mat-color($fuse-navy, 600);
+                    } @else {
+                        background: map-get($background, card);
+                    }
+                }
+            }
+        }
+    }
+    user-profile {
+        #user-profile {
+            @if ($is-dark) {
+                background: mat-color($fuse-navy, 600);
+            } @else {
+                background: map-get($background, card);
+            }
+        }
+    }
+}

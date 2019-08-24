@@ -1,0 +1,12 @@
+<ng-container *ngIf="showLoading">
+    <ngx-loading [show]="true"></ngx-loading>
+</ng-container>
+<mat-card class="card">
+
+    <mat-form-field class="example-full-width">
+        <input matInput [formControl]="orderNumInput" autofocus #orderNumElm placeholder="888 Number">
+    </mat-form-field>
+
+    <input type="file" ng2FileSelect multiple #fileInput [uploader]="uploader" accept=".xls,.xlsx,.csv"
+        (onFileSelected)="onFileSelected($event)" />
+</mat-card>

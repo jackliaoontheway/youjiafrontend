@@ -1,0 +1,131 @@
+<div class="data-container">
+    <ng-container *ngIf="showLoading">
+        <ngx-loading [show]="true"></ngx-loading>
+    </ng-container>
+    <table mat-table [dataSource]="entities" [@animateStagger]="{value:'50'}">
+
+        <!-- 第一列： 表头是：对整个列表可以做的操作 行：对于每条数据可以做的操作 -->
+        <ng-container matColumnDef="{{initialColumns[0]}}" (click)="$event.stopPropagation();">
+            <th mat-header-cell *matHeaderCellDef>
+                <button mat-icon-button [matMenuTriggerFor]="tableMenu" aria-label="More"
+                    (click)="$event.stopPropagation();">
+                    <mat-icon class="secondary-text">more_vert</mat-icon>
+                </button>
+                <mat-menu #tableMenu="matMenu">
+
+                    <button mat-menu-item aria-label="remove" *ngIf="hasModelOperation('batchdelete', modelSpec)"
+                        (click)="deleteSelectedEntities()">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'Model.label.deleteSelectedEntities' | translate}}</span>
+                    </button>
+
+                    <button mat-menu-item aria-label="download" *ngIf="hasModelOperation('download', modelSpec)"
+                        (click)="downloadSelectedEntities()">
+                        <mat-icon>cloud_download</mat-icon>
+                        <span>{{'Model.label.downloadSelectedEntities' | translate}}</span>
+                    </button>
+
+                    <button mat-menu-item aria-label="download" *ngIf="hasModelOperation('download', modelSpec)">
+                        <mat-icon>cloud_download</mat-icon>
+                        <span>{{'Model.label.downloadAllEntities' | translate}}</span>
+                    </button>
+
+                    <button mat-menu-item aria-label="upload" *ngIf="hasModelOperation('upload', modelSpec)"
+                        (click)="onUploadEntityDataFile(fileInput)">
+                        <mat-icon>cloud_upload</mat-icon>
+                        <span>{{'Model.label.uploadData' | translate}}</span>
+                    </button>
+
+                    <button mat-menu-item aria-label="add" *ngIf="hasModelOperation('add', modelSpec)"
+                        (click)="selectEntity(null, 'add')">
+                        <mat-icon>add</mat-icon>
+                        <span>{{'Model.label.add' | translate}}</span>
+                    </button>
+
+                    <ng-container *ngFor="let fun of modelSpec.modelFunctionalities">
+                        <button mat-menu-item aria-label="add" *ngIf="hasClassOperation(fun)"
+                            (click)="onClassFunction(fun, fileInput)">
+                            <mat-icon>{{fun.iconName}}</mat-icon>
+                            <span>{{fun.label}}</span>
+                        </button>
+                    </ng-container>
+                    <input type="file" hidden ng2FileSelect multiple #fileInput [uploader]="fileUploader"
+                        (onFileSelected)="onFileSelected($event)" />
+                </mat-menu>
+            </th>
+            <td mat-cell *matCellDef="let entity" (click)="$event.stopPropagation();">
+                <button mat-icon-button [matMenuTriggerFor]="rowMenu" aria-label="More"
+                    (click)="$event.stopPropagation();">
+                    <mat-icon class="secondary-text">more_vert</mat-icon>
+                </button>
+                <!-- 对于每条数据可以做的操作 -->
+                <mat-menu #rowMenu="matMenu">
+                    <button mat-menu-item aria-label="update" *ngIf="hasModelOperation('update', modelSpec)"
+                        (click)="selectEntity(entity, 'edit');">
+                        <mat-icon>edit</mat-icon>
+                        <span>{{'Model.label.edit' | translate}}</span>
+                    </button>
+                    <button mat-menu-item aria-label="remove" *ngIf="hasModelOperation('delete', modelSpec)"
+                        (click)="removeEntity(entity);">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'Model.label.delete' | translate}}</span>
+                    </button>
+                    <button mat-menu-item aria-label="clone" *ngIf="hasModelOperation('clone', modelSpec)"
+                        (click)="cloneEntity(entity);">
+                        <mat-icon>file_copy</mat-icon>
+                        <span>{{'Model.label.clone' | translate}}</span>
+                    </button>
+                    <button mat-menu-item aria-label="details" (click)="selectEntity(entity, 'detail');">
+                        <mat-icon>details</mat-icon>
+                        <span>{{'Model.label.detail' | translate}}</span>
+                    </button>
+                    <ng-container *ngFor="let fun of modelSpec.objectFunctionalities">
+                        <button mat-menu-item aria-label="add" *ngIf="hasInstanceOperation(fun)"
+                            (click)="onInstanceFunction(fun, entity.id)">
+                            <mat-icon>{{fun.iconName}}</mat-icon>
+                            <span>{{fun.label}}</span>
+                        </button>
+                    </ng-container>
+                </mat-menu>
+            </td>
+        </ng-container>
+
+        <!-- 第二列： 用于选择数据的选择框 -->
+        <ng-container matColumnDef="{{initialColumns[1]}}"
+            *ngIf="modelSpec && (modelSpec.batchDeletable || modelSpec.downloadable)">
+            <th mat-header-cell *matHeaderCellDef (click)="$event.stopPropagation();">
+                <mat-checkbox #selectAllElm class="selectAllElm" checked="{{isAllSelectionChecked()}}"
+                    (change)="onSelectAllChanged(selectAllElm.checked)"></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let entity" (click)="$event.stopPropagation();">
+                <mat-checkbox name="{{modelSpec.className}}" checked="{{checkSelection(entity.id)}}"
+                    (change)="onSelectedChange(entity.id)" (click)="$event.stopPropagation();"></mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- 模型的数据项列 -->
+        <ng-container *ngFor="let fSpec of fieldSpecs" matColumnDef="{{fSpec.name}}">
+            <th mat-header-cell *matHeaderCellDef>
+                {{fSpec.label}}
+            </th>
+            <td mat-cell *matCellDef="let entity">
+                <p class="text-truncate">
+                    {{getFieldValue(entity, fSpec)}}
+                </p>
+            </td>
+        </ng-container>
+
+        <!-- 翻页器， 目前是嵌入到表格中的 -->
+        <ng-container matColumnDef="pagenationbar">
+            <td mat-footer-cell *matFooterCellDef [colSpan]="columnsToDisplay.length">
+                <mat-paginator #paginator fxLayout="row" fxFlexAlign="start" [pageSizeOptions]="pageSizeValues"
+                    [pageSize]="pageSize" [length]="totalRecords" [pageIndex]="currentPage-1" showFirstLastButtons
+                    (page)="onPaginatorChanged($event);"></mat-paginator>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+        <!--    这里行点击好像容易误操作-->
+        <tr mat-row *matRowDef="let entity; columns: columnsToDisplay" (click)="selectEntity(entity, 'detail')"></tr>
+        <tr mat-footer-row *matFooterRowDef="['pagenationbar'];sticky: true"></tr>
+    </table>
+</div>

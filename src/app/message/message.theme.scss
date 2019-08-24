@@ -1,0 +1,21 @@
+@mixin message-theme($theme) {
+
+    .alertSuccess{
+        background: #33bf10f9 !important;
+        color: rgba(255, 255, 255, 0.88) !important;
+        font-weight: bold !important;
+        max-width:300px !important;
+    }
+    .alertWarning{
+        background: #eaae03f9!important;
+        color: rgba(255, 255, 255, 0.88) !important;
+        font-weight: bold !important;
+        max-width:300px !important;
+    }
+    .alertFail{
+        background: #d02707f7 !important;
+        color: rgba(255, 255, 255, 0.88) !important;
+        font-weight: bold !important;
+        max-width:300px !important;
+    }
+}

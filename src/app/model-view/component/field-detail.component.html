@@ -1,0 +1,44 @@
+<div fxLayoutGap="10px grid" class="customer" fxLayout="row" fxLayoutAlign="center start" fxLayout.lt-md="column"
+    fxLayoutAlign.lt-md="center stretch" *ngFor="let nfSpec of rowFieldData">
+    <div fxFlex="calc(50%-10px)" class="my-12 fxRow" fxLayout="row" fxLayoutAlign="space-around stretch"
+        fxLayoutGap="10px grid" *ngIf="nfSpec.left">
+        <div fxFlex="calc(25%-10px)" class="border-bottom text-truncate" style="font-weight: bold;line-height: 40px;"
+            title="{{nfSpec.left.label}}">{{nfSpec.left.label}}:</div>
+        <ng-container [ngSwitch]="nfSpec.left.dataType">
+            <ng-container *ngSwitchCase="'photo'">
+                <div fxFlex="calc(75%-10px)" class="border-bottom padding-none">
+                    <div class="product-image" [ngClass]="'cursor-pointer'">
+                        <img [src]="getImgUrl(nfSpec.left)" (click)="showImage(nfSpec.left)">
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <div fxFlex="calc(75%-10px)" class="border-bottom padding-none nowrap"
+                    [ngClass]="getFieldStyle(nfSpec.left)" style="line-height: 40px;"
+                    (click)="openOrDownloadIfFile(nfSpec.left)" title="{{getFieldValue(nfSpec.left)}}">
+                    {{getFieldValue(nfSpec.left)}}</div>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div fxFlex="calc(50%-10px)" class="my-12 fxRow" fxLayout="row" fxLayoutAlign="space-around stretch"
+        fxLayoutGap="10px grid" *ngIf="nfSpec.right">
+        <div fxFlex="calc(25%-10px)" class="border-bottom text-truncate" style="font-weight: bold;line-height:40px;"
+            title="{{nfSpec.right.label}}">
+            {{nfSpec.right.label}}:</div>
+        <ng-container [ngSwitch]="nfSpec.right.dataType">
+            <ng-container *ngSwitchCase="'photo'">
+                <div fxFlex="calc(75%-10px)" class="border-bottom padding-none">
+                    <div class="product-image" [ngClass]="'cursor-pointer'">
+                        <img [src]="getImgUrl(nfSpec.right)" (click)="showImage(nfSpec.right)">
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <div fxFlex="calc(75%-10px)" class="border-bottom padding-none nowrap"
+                    [ngClass]="getFieldStyle(nfSpec.right)" style="line-height: 40px;"
+                    (click)="openOrDownloadIfFile(nfSpec.right)" title="{{getFieldValue(nfSpec.right)}}">
+                    {{getFieldValue(nfSpec.right)}}</div>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,135 @@
+<div id="modelpage" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+    <!-- 明示当前位置，以及搜索区域 -->
+    <div class="header accent p-8 p-sm-12" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+        fxLayoutAlign.gt-xs="space-between">
+        <div fxLayout="row" fxLayoutAlign="start center" style="width:100%">
+            <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}"
+                    *ngIf="modelSpec">
+                    {{modelSpec.iconName}}
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}" *ngIf="modelSpec">
+                    {{modelSpec.label}}
+                </span>
+            </div>
+            <div class="ml-sm-32" *ngIf="modelSpec && modelSpec.searchField && modelSpec.searchField.trim().length>0"
+                fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                <div class="search-wrapper mt-16 mt-sm-0">
+                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                        <input [formControl]="searchInput" #searchElm
+                            placeholder="{{getSearchFieldLabel(modelSpec.searchField)}}"
+                            (keydown)="onKeyPress($event, searchElm)" (focus)="onFocus(searchElm)">
+                        <span fxLayout="row" fxLayoutAlign="start center" (click)="onSearch(searchElm)">
+                            <mat-icon>search</mat-icon>
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="hasAdvanceSearch()">
+                    <button mat-button class="mr-5" (click)="showHideSearchCriteriaArea()" fxLayoutAlign="start center">
+                        <span class="ml-16" fxHide fxShow.gt-xs>{{expandText}}</span>
+                        <mat-icon>{{expandIcon}}</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div fxLayoutAlign="end center" fxFlex style="max-width: 100px;min-width: 50px;">
+                <mat-select [formControl]="displayForm" multiple [value]="columnsToDisplay" #columnsToDisplay
+                    (selectionChange)="onChangeShowColumns($event)" style="max-width: 100px;min-width: 30px;">
+                    <mat-select-trigger>
+                        <span style="font-weight: bold" fxHide fxShow.gt-xs fxShow.gt-sm>{{showColumns}}</span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let column of fieldSpecs" [value]="column.name">{{column.label}}</mat-option>
+                </mat-select>
+                <button mat-button (click)="onSaveDisplayColumns(columnsToDisplay)" fxHide fxShow.gt-xs fxShow.gt-sm>
+                    {{saveSetting}}
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- 明示当前位置，以及搜索区域 -->
+    <!-- 高级搜索区域 -->
+    <div *ngIf="showAdvanceSearchArea">
+        <div fxFlex="calc(100%-10px)" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px grid"
+            style="margin-top: 5px;">
+            <div fxFlex="calc(75%-20px)" class="advanceSearch" style="font-weight: bold;">
+                <form>
+                    <search-field [entity]="entity" [fieldSpecs]="searchFields" [modelForm]="searchModelForm"
+                        (formChanged)="onFormChanged($event)"></search-field>
+                </form>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-select placeholder="{{searchParams}}" [formControl]="searchCheckbox" multiple
+                        [value]="searchFieldNames" #searchFieldNames (selectionChange)="onSelectionChanged($event)"
+                        style="min-width: 100px;max-width: 160px;">
+                        <mat-select-trigger>
+                            {{searchCheckbox.value ? searchCheckbox.value[0]: ''}}
+                            <span *ngIf="searchCheckbox.value?.length > 1" class="example-additional-selection">
+                                (+{{searchCheckbox.value.length - 1}}
+                                {{searchCheckbox.value?.length === 2 ? 'other' : 'others'}})
+                            </span>
+                        </mat-select-trigger>
+                        <!--              <mat-option (click)="selectAll(searchCheckbox)">SELECT ALL</mat-option>-->
+                        <mat-option *ngFor="let spec of canSearchList" [value]="spec.name">{{spec.label}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+                <div class="searchBtn" style="margin-right:10px;">
+                    <button mat-flat-button color="accent" (click)="onAdvanceSearch(searchFieldNames)">
+                        <!--                        <span class="ml-16" fxHide fxShow.gt-xs>searchText</span>-->
+                        <mat-icon>search</mat-icon>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 高级搜索区域 -->
+    <!-- 业务模型的管理区域 -->
+    <div class="model-content center p-24 pb-24" fusePerfectScrollbar>
+        <ng-container [ngSwitch]='viewType' *ngIf="modelSpec">
+            <ng-container *ngSwitchCase="'list'">
+                <ng-container *ngIf="!isTabContainer(modelSpec)">
+                    <model-list *ngSwitchCase="'list'" [fieldSpecs]="fieldSpecs" [modelSpecs]="modelSpecs"
+                        [modelSpec]="modelSpec" [modelName]="modelName" [searchCriteria]="searchCriteria"
+                        [serviceUrl]="serviceUrl" (entityIdChanged)="onEntityIdChanged($event)" style="overflow: auto;">
+                    </model-list>
+                </ng-container>
+                <!-- 如果有用于分类的标签， 需要创建tabs组件 -->
+                <ng-container *ngIf="isTabContainer(modelSpec)">
+                    <mat-tab-group fxFlex class="model-tab-content">
+                        <mat-tab label="All Data">
+                            <ng-template matTabContent>
+                                <model-list [fieldSpecs]="fieldSpecs" [modelSpecs]="modelSpecs" [modelSpec]="modelSpec"
+                                    [modelName]="modelName" [searchCriteria]="searchCriteria" [serviceUrl]="serviceUrl"
+                                    (entityIdChanged)="onEntityIdChanged($event)" style="overflow: auto;"></model-list>
+                            </ng-template>
+                        </mat-tab>
+                        <mat-tab label="{{generateTabLabel(tabValue)}}"
+                            *ngFor="let tabValue of modelSpec.tabListValues">
+                            <ng-template matTabContent>
+                                <model-list [fieldSpecs]="fieldSpecs" [modelSpecs]="modelSpecs" [modelSpec]="modelSpec"
+                                    [modelName]="modelName" [searchCriteria]="searchCriteria" [tabValue]="tabValue"
+                                    [serviceUrl]="serviceUrl" (entityIdChanged)="onEntityIdChanged($event)"
+                                    style="overflow: auto;"></model-list>
+                            </ng-template>
+                        </mat-tab>
+                    </mat-tab-group>
+                </ng-container>
+            </ng-container>
+            <model-tab *ngSwitchCase="'detail'" [modelSpec]="fetchModelSpec()" [actionString]="'detail'"
+                [entityId]="selectedEntityId" [serviceUrl]="serviceUrl" [fieldSpecs]="fetchFieldSpecs()"
+                (backAction)="onDetailBackAction($event);"></model-tab>
+            <model-tab *ngSwitchCase="'edit'" [modelSpec]="fetchModelSpec()" [actionString]="'edit'"
+                [entityId]="selectedEntityId" [serviceUrl]="serviceUrl" [fieldSpecs]="fetchFieldSpecs()"
+                (backAction)="onDetailBackAction($event);"></model-tab>
+            <model-tab *ngSwitchCase="'add'" [modelSpec]="fetchModelSpec()" [actionString]="'edit'"
+                [serviceUrl]="serviceUrl" [entity]="selectedEntity" [fieldSpecs]="fetchFieldSpecs()"
+                (backAction)="onDetailBackAction($event);">
+            </model-tab>
+        </ng-container>
+    </div>
+    <!-- 业务模型的管理区域 -->
+</div>

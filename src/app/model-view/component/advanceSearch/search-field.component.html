@@ -1,0 +1,151 @@
+
+
+
+
+<!--<mat-checkbox  class="example-ripple-checkbox">Centered</mat-checkbox>-->
+<!--<mat-checkbox  class="example-ripple-checkbox">Disabled</mat-checkbox>-->
+<!--<mat-checkbox  class="example-ripple-checkbox">Unbounded</mat-checkbox>-->
+
+<!--<mat-form-field class="example-ripple-form-field">-->
+<!--  <input matInput  type="number" placeholder="Radius">-->
+<!--</mat-form-field>-->
+<!--<mat-form-field class="example-ripple-form-field">-->
+<!--  <input matInput type="text" placeholder="Color">-->
+<!--</mat-form-field>-->
+
+
+<ng-container *ngFor="let fSpec of fieldSpecs" >
+    <ng-container [ngSwitch]="fSpec.inputType" >
+        <!-- 嵌入式数据的编辑方案 -->
+        <mat-expansion-panel *ngSwitchCase="'embedded'" class="example-ripple-formd" [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{fSpec.label}}</mat-panel-title>
+            </mat-expansion-panel-header>
+              <form [formGroup]="modelForm.controls[fSpec.name]">
+                  <search-field  [entity] = "entity[fSpec.name]" [fieldSpecs]="fSpec.componentMetaDatas" [modelForm]="modelForm.controls[fSpec.name]" (formChanged)="onFormChanged($event)" ></search-field>
+              </form>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel *ngSwitchCase="'array'" class="example-ripple-formd" [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{fSpec.label}}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <form [formGroup]="modelForm.controls[fSpec.name].controls[0]">
+            <search-field  [entity] = "entity[fSpec.name]" [fieldSpecs]="fSpec.componentMetaDatas" [modelForm]="modelForm.controls[fSpec.name].controls[0]" (formChanged)="onFormChanged($event)" ></search-field>
+          </form>
+        </mat-expansion-panel>
+
+        <!-- 一般的文本编辑，建议<50个字符的数据使用这个组件 -->
+        <mat-form-field *ngSwitchCase="'text'"  class="example-ripple-form-field" appearance="outline">
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+            <input name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                 (change)="onValueChange()" />
+        </mat-form-field>
+
+        <!-- 在文本编辑，允许换行的数据，建议使用这个组件 -->
+        <mat-form-field *ngSwitchCase="'textarea'" class="example-ripple-form-field" appearance="outline">
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+            <textarea name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                 (change)="onValueChange()"></textarea>
+        </mat-form-field>
+
+        <!-- 日期型数据编辑控件， 暂时没有时间的支持 -->
+        <mat-form-field *ngSwitchCase="'date'" class="example-ripple-form-field" appearance="outline">
+            <input name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                [matDatepicker]="picker" placeholder="{{fSpec.label}}" 
+                (change)="onValueChange()">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- 电子邮件的编辑和校验框 -->
+        <mat-form-field *ngSwitchCase="'email'" class="example-ripple-form-field" appearance="outline">
+            <mat-label>{{fSpec.label}}</mat-label>
+            <mat-icon matSuffix class="secondary-text">text_fields</mat-icon>
+            <input name="{{fSpec.name}}" [formControl]="modelForm.controls[fSpec.name]" matInput
+                 (change)="onValueChange()">
+        </mat-form-field>
+
+
+        <!-- 自动完成框 选项数量在10个以上的使用的编辑控件 -->
+        <mat-form-field *ngSwitchCase="'autocomplete'"  class="example-ripple-form-field" appearance="outline">
+            <input matInput placeholder="{{fSpec.label}}" [matAutocomplete]="auto" [formControl]="myControl[fSpec.name]"
+                >
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onAutoCompleteSelected(fSpec, $event)">
+                <mat-option *ngFor="let item of filteredOptions[fSpec.name] | async" [value]="item.label">
+                    <span>{{item.label}}</span><span hidden>,{{item.value}}</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- 单选下拉框 选项数量在3-10个的使用的编辑控件 -->
+        <mat-form-field *ngSwitchCase="'singleSelect'"  class="example-ripple-form-field" appearance="outline">
+            <mat-select placeholder="{{fSpec.label}}" [value]="getSingleSelectionInitialValue(fSpec)"
+                 (selectionChange)="onSingleValueChange(fSpec, $event)">
+                <mat-option *ngFor="let item of fSpec.selectiveItems" [value]="item.value">
+                    {{item.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+<!--        &lt;!&ndash; 单选按钮，选项数量是1-3个使用的编辑控件 &ndash;&gt;-->
+<!--        <ng-container *ngSwitchCase="'radio'"  class="example-ripple-form-field">-->
+<!--            <div fxLayout="row" fxLayoutAlign="space-around center" fxFlex>-->
+<!--                <label style="width:40%; margin-right: 10px;">{{fSpec.label}}</label>-->
+<!--                <mat-radio-group fxFlex -->
+<!--                    (change)="onSingleValueChange(fSpec, $event)">-->
+<!--                    <mat-radio-button *ngFor="let item of fSpec.selectiveItems" [value]="item.value"-->
+<!--                        [checked]="item.checked" style="margin: 10px;">{{item.label}}-->
+<!--                    </mat-radio-button>-->
+<!--                </mat-radio-group>-->
+<!--            </div>-->
+<!--        </ng-container>-->
+
+<!--        &lt;!&ndash; 多选按钮， 在小屏幕的时候，是单列显示， 大点的屏幕使用双列显示所有选项 &ndash;&gt;-->
+<!--        <ng-container *ngSwitchCase="'checkbox'">-->
+<!--            <div fxHide fxShow.lt-sm>-->
+<!--                <div fxLayout.lt-sm="row" fxLayoutAlign.lt-sm="space-around start">-->
+<!--                    <div fxLayout="column" fxLayoutAlign="space-evenly start" class="mr-16">-->
+<!--                        <label class="mt-16 mr-16">{{fSpec.label}}</label>-->
+<!--                    </div>-->
+<!--                    <div fxLayout="column" fxLayoutAlign="start stretch" class="mr-16">-->
+<!--                        <mat-checkbox *ngFor="let item of fSpec.selectiveItems; index as i" [value]="item.value"-->
+<!--                            [checked]="item.checked" style="margin: 10px;"-->
+<!--                            (change)="onSelectionChanged(fSpec, item.value)">{{item.label}}-->
+<!--                        </mat-checkbox>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div fxShow.gt-xs="true" fxHide.xs="true">-->
+<!--                <div fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-evenly start">-->
+<!--                    &lt;!&ndash; 2 columns &ndash;&gt;-->
+<!--                    <label class="mr-16">{{fSpec.label}}</label>-->
+<!--                    <div fxLayout="column" fxLayoutAlign="start stretch" class="mr-16" fxFlex>-->
+<!--                        <div *ngFor="let item of fSpec.selectiveItems; even as isEven">-->
+<!--                            <mat-checkbox *ngIf="isEven" [value]="item.value" [checked]="item.checked"-->
+<!--                                style="margin: 10px;" (change)="onSelectionChanged(fSpec, item.value)">{{item.label}}-->
+<!--                            </mat-checkbox>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex>-->
+<!--                        <div *ngFor="let item of fSpec.selectiveItems; odd as isOdd">-->
+<!--                            <mat-checkbox *ngIf="isOdd" [value]="item.value" [checked]="item.checked"-->
+<!--                                style="margin: 10px;" (change)="onSelectionChanged(fSpec, item.value)">{{item.label}}-->
+<!--                            </mat-checkbox>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </ng-container>-->
+
+        <!-- 文件型的数据，目前每个业务模型只支持同时上传一个附件， 保存在BaseModel的fileInfo中， 使用FileUploader控件实现 -->
+<!--        <mat-form-field *ngSwitchCase="'file'"  class="example-ripple-form-field" (click)="fileInput.click()">-->
+<!--            <mat-label>{{fSpec.label}}</mat-label>-->
+<!--            <mat-icon matSuffix class="secondary-text">backup</mat-icon>-->
+<!--            <input name="{{fSpec.name}}" [formControl]="fileNameControl" matInput readonly="true">-->
+<!--        </mat-form-field>-->
+    </ng-container>
+
+</ng-container>

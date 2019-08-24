@@ -1,0 +1,179 @@
+<ng-container id="expand-table">
+    <mat-card id="card">
+        <table class="datatable" style="width: calc(100% - 24px)">
+            <tr>
+
+                <th width="40px;"  (click)="$event.stopPropagation();">
+                    <button mat-icon-button [matMenuTriggerFor]="tableMenu" aria-label="More"
+                            (click)="$event.stopPropagation();">
+                        <mat-icon class="secondary-text">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #tableMenu="matMenu">
+                        <button mat-menu-item aria-label="add" (click)="onSaveSelectScheme()">
+                            <mat-icon>add</mat-icon>
+                            <span>保存选择方案</span>
+                        </button>
+                    </mat-menu>
+                </th>
+                <th (click)="$event.stopPropagation();" width="30px;">
+                    <mat-checkbox #selectAllElm class="selectAllElm" checked="{{isAllSelectionChecked()}}"
+                                  (change)="onSelectAllChanged(selectAllElm.checked)"></mat-checkbox>
+                </th>
+                <th width="10%">{{schemeObj['aviationCompany'].label}}</th>
+                <th width="10%">{{schemeObj['airline'].label}}</th>
+                <th width="10%">{{queryObj['toCity'].label}}</th>
+                <th width="10%">{{schemeObj['airportWarehouse'].label}}</th>
+                <th width="8%">{{schemeObj['prescription'].label}}</th>
+                <th width="14%">{{queryObj['weight'].label}}/{{queryObj['volume'].label}}/体积重/收费重</th>
+                <th width="10%">{{schemeObj['bubbleRate'].label}}</th>
+                <th width="8%">汇总</th>
+            </tr>
+        </table>
+    </mat-card>
+    <ng-container *ngFor="let entity of entities" >
+
+        <mat-accordion>
+            <mat-expansion-panel [expanded]= "true" style="margin-bottom: 8px;border: 1px solid #ddd;">
+                <mat-expansion-panel-header style="padding:5px 15px 0 5px;">
+                    <mat-panel-title>
+                        <table class="datatable">
+                            <tr>
+                                <td width="40px;">
+                                    <button mat-icon-button [matMenuTriggerFor]="detailMenu" aria-label="More"
+                                            (click)="$event.stopPropagation();">
+                                        <mat-icon class="secondary-text">more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #detailMenu="matMenu">
+                                        <button mat-menu-item aria-label="add"  (click)="onSaveScheme(entity)">
+                                            <mat-icon>add</mat-icon>
+                                            <span>保存方案</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                                <td (click)="$event.stopPropagation();" width="30px">
+                                    <mat-checkbox name="" checked="{{checkSelection(entity)}}"
+                                                  (change)="onSelectedChange(entity)" (click)="$event.stopPropagation();"></mat-checkbox>
+                                </td>
+<!--                                <td width="10%">{{entity.schemeNum}}</td>-->
+                                <td width="10%">{{entity.aviationCompany?entity.aviationCompany.name:''}}</td>
+                                <td width="10%">{{entity.airline.code}}</td>
+                                <td width="10%">{{entity.queryCondition.toCity?entity.queryCondition.toCity.name:''}}</td>
+                                <td width="10%">{{entity.airportWarehouse?entity.airportWarehouse.name:''}}</td>
+                                <td width="8%">{{entity.prescription}}</td>
+                                <td width="14%">
+                                    {{entity.queryCondition.weight.value}}/{{entity.queryCondition.volume.value}}({{entity.queryCondition.volume.unit}})/{{entity.queryCondition.volume.value * 167}}/{{entity.costWeight}} {{entity.queryCondition.weight.unit}}
+                                </td>
+                                <td width="10%"><span (click)="$event.stopPropagation();onSetBubbleRate(entity);"><mat-icon matSuffix style="margin-right: 4px;font-size: 18px" class="secondary-text">settings</mat-icon>{{entity.bubbleRate * 100}}%</span></td>
+                                <td width="8%"><span style="color:#09ab1d;font-weight:600;font-size:13px;">{{entity.totalCurrency}} {{entity.total}}</span></td>
+                            </tr>
+                        </table>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container>
+                    <div *ngIf="entity.quoteChargeItem">
+                        <ng-container *ngFor="let type of chargeType" >
+                            <ng-container *ngIf= isFreightRate(type) >
+                                <mat-expansion-panel [expanded]="true" style="margin-bottom: 3px;border: 1px solid #eee;display: inline-block;width: 100%;" *ngIf=hasThisType(entity.quoteChargeItem,type)>
+                                    <mat-expansion-panel-header style="height: 40px;max-height: 40px;padding-top:5px;">
+                                        <mat-panel-title>
+                                            <div class="detail_header"><span class="type">{{getThisTypeName(entity.quoteChargeItem,type)}}</span><span class="total"><span>小计: </span><span style="color: #09ab1d;font-weight: 600;">{{getThisTypeTotal(entity.quoteChargeItem,type)}}</span></span></div>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="detailsItem" *ngIf=hasThisType(entity.quoteChargeItem,type)>
+                                        <ng-container *ngFor="let chargeItem of entity.quoteChargeItem" >
+                                            <ng-container *ngIf="chargeItem.chargeRateItem.chargeRateCategory.code === type">
+                                                <ul class="itemRow">
+                                                    <div >
+                                                        <li>
+                                                            <div  class="subTwo l" style="width: 5%;">
+                                                                <mat-checkbox #itemCheck [checked]="chargeItem.quoteFreightFee?chargeItem.quoteFreightFee.isCheck:false" (change)="onChargeItemSelect(itemCheck.checked,chargeItem,entity)" ></mat-checkbox>
+                                                            </div>
+                                                            <div class="subTitle l" style="width: 45%;">
+                                                                <span>等级范围:</span>
+                                                                <span>{{chargeItem.quoteFreightFee?chargeItem.quoteFreightFee.code:''}}</span>
+                                                            </div>
+                                                            <div  class="subTwo l" style="width: 25%;">单价: {{chargeItem.unitPriceInfo.unitPrice.currency}} {{chargeItem.unitPriceInfo.unitPrice.amount}} / {{chargeItem.chargeUnit.name}}</div>
+                                                            <div  class="subTwo l" style="width: 5%;">
+                                                                <mat-icon matSuffix style="margin-right: 4px;font-size: 18px;cursor:pointer" class="secondary-text"
+                                                                    title="最低销售价：{{(chargeItem.minSalesPriceInfo && chargeItem.minSalesPriceInfo.unitPrice)?chargeItem.minSalesPriceInfo.unitPrice.currency:''}} {{(chargeItem.minSalesPriceInfo && chargeItem.minSalesPriceInfo.unitPrice)?chargeItem.minSalesPriceInfo.unitPrice.amount:'N/A'}} / {{chargeItem.chargeUnit.name}}">remove_red_eye</mat-icon>
+                                                            </div>
+                                                            <div  class="subTwo l" style="width: 20%;">小计: <span style="color: #09ab1d;font-weight: bold;font-size: 15px;">{{chargeItem.itemTotal}}</span> </div>
+                                                        </li>
+                                                    </div>
+                                                </ul>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </mat-expansion-panel>
+                            </ng-container>
+                            <ng-container *ngIf= !isFreightRate(type)>
+                                <mat-expansion-panel [expanded]="false" style="margin-bottom: 3px;border: 1px solid #eee;display: inline-block;width: 100%;" *ngIf=hasThisType(entity.quoteChargeItem,type)>
+                                    <mat-expansion-panel-header style="height: 40px;max-height: 40px;padding-top:5px;">
+                                        <mat-panel-title>
+                                            <div class="detail_header"><span class="type">{{getThisTypeName(entity.quoteChargeItem,type)}}</span><span class="total"><span>小计: </span><span style="color: #09ab1d;font-weight: 600;">{{getThisTypeTotal(entity.quoteChargeItem,type)}}</span></span></div>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="detailsItem" >
+                                        <ng-container *ngFor="let chargeItem of entity.quoteChargeItem" >
+                                            <ng-container *ngIf="chargeItem.chargeRateItem.chargeRateCategory.code === type">
+                                                <ul class="itemRow">
+                                                    <li>
+                                                        <div class="subTitle l" style="width: 50%;">
+                                                            <span style="width: 40%;display: inline-block;" class="{{chargeItem.hasDiscount?'discount':''}}">{{chargeItem.chargeRateItem.name}}</span>
+                                                            <span style="width: 60%;display: inline-block;color: red" *ngIf= chargeItem.hasDiscount>*备注:客户特殊费用项包含此费用,不纳入汇总</span>
+                                                        </div>
+                                                        <div  class="subTwo l  {{chargeItem.hasDiscount?'discount':''}}" style="width: 25%;">单价: {{chargeItem.unitPriceInfo.unitPrice.currency}} {{chargeItem.unitPriceInfo.unitPrice.amount}} / {{chargeItem.chargeUnit.name}}</div>
+                                                        <div  class="subTwo l  {{chargeItem.hasDiscount?'discount':''}}" style="width: 5%;">
+                                                            <mat-icon matSuffix style="margin-right: 4px;font-size: 18px;cursor:pointer" class="secondary-text"
+                                                                      title="最低销售价：{{(chargeItem.minSalesPriceInfo && chargeItem.minSalesPriceInfo.unitPrice)?chargeItem.minSalesPriceInfo.unitPrice.currency:''}} {{(chargeItem.minSalesPriceInfo && chargeItem.minSalesPriceInfo.unitPrice)?chargeItem.minSalesPriceInfo.unitPrice.amount:'N/A'}} / {{chargeItem.chargeUnit.name}}">remove_red_eye</mat-icon>
+                                                        </div>
+                                                        <div  class="subTwo l  {{chargeItem.hasDiscount?'discount':''}}" style="width: 20%;">小计: <span class="itemtotal {{chargeItem.hasDiscount?'discount':''}}">{{chargeItem.itemTotal}}</span>  </div>
+                                                    </li>
+                                                </ul>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </mat-expansion-panel>
+
+                            </ng-container>
+                        </ng-container>
+
+                        <ng-container *ngIf= entity.quoteSpecialFees>
+                            <mat-expansion-panel [expanded]="false" style="margin-bottom: 3px;border: 1px solid #eee;display: inline-block;width: 100%;" *ngIf=hasSpecialFee(entity.quoteSpecialFees)>
+                                <mat-expansion-panel-header style="height: 40px;max-height: 40px;padding-top:5px;">
+                                    <mat-panel-title>
+                                        <div class="detail_header"><span class="type">客户特殊费用项</span><span class="total"><span>小计: </span><span style="color: #09ab1d;font-weight: 600;">{{getSpecialFeeTotal(entity.quoteSpecialFees)}}</span></span></div>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="detailsItem" >
+                                    <ng-container *ngFor="let specialFee of entity.quoteSpecialFees">
+                                        <ng-container *ngIf="specialFee.hasExist">
+                                            <ul class="itemRow">
+                                                <li>
+                                                    <div class="subTitle l" style="width: 15%;"><span>{{specialFee.name}}</span></div>
+                                                    <div  class="subTwo l" style="width: 35%;">包含费用项: <span style="font-weight: bold;font-size: 15px;">{{getFieldValue(specialFee,specialFeeObj['feeItems'])}}</span></div>
+                                                    <div  class="subTwo l" style="width: 30%;">单价: {{specialFee.unitPrice.currency}} {{specialFee.unitPrice.amount}} / {{specialFee.chargeUnit.name}}</div>
+                                                    <div  class="subTwo l" style="width: 20%;">小计: <span class="itemtotal">{{specialFee.itemTotal}}</span>  </div>
+                                                </li>
+                                            </ul>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </mat-expansion-panel>
+                        </ng-container>
+                        <div class="detailsItem2">
+                            <div class="subTitle l" style="width: 100%;">
+                                <h4>
+                                    <span>汇总: </span><span style="color: #09ab1d;font-weight: bold;font-size: 15px;">{{entity.totalCurrency}} {{entity.total}}</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </ng-container>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+    </ng-container>
+</ng-container>
+

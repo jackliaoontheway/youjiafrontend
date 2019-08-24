@@ -1,0 +1,27 @@
+.product-image {
+	overflow-x: visible;
+	min-width: 40px;
+	max-width: 100px;
+	min-height: 40px;
+	max-height: 40px;
+	border-radius: 4px;
+
+	img {
+		height: 40px;
+		max-width: none;
+	}
+}
+.fxRow{
+	margin-top: 5px!important;
+	margin-bottom: 5px!important;
+}
+
+.padding-none{
+	padding: 0px 10px 0px 0px!important;
+}
+
+.nowrap{
+	display: block;
+	overflow-x: scroll;
+	white-space: nowrap;
+}

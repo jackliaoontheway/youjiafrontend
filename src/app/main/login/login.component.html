@@ -1,0 +1,77 @@
+<div id="login" fxLayout="column">
+
+    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="login-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
+
+            <div class="logo">
+                <img src="assets/images/logos/logo.png">
+            </div>
+
+            <div class="title">{{'Login.label.title' | translate}}</div>
+
+            <form name="loginForm" [formGroup]="loginForm" novalidate>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>{{'Login.label.loginName' | translate}}</mat-label>
+                    <input matInput formControlName="email">
+                    <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+                    <mat-error *ngIf="loginForm.get('email').hasError('required')">
+                        {{'Login.label.loginName' | translate}}{{'Login.error.required' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="!loginForm.get('email').hasError('required') &&
+                                loginForm.get('email').hasError('email')">
+                        {{'Login.error.email' | translate}}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>{{'Login.label.password' | translate}}</mat-label>
+                    <input matInput type="password" formControlName="password">
+                    <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+                    <mat-error>
+                        {{'Login.label.password' | translate}}{{'Login.error.required' | translate}}
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
+                     fxLayoutAlign="space-between center">
+                    <mat-checkbox class="remember-me" aria-label="Remember Me" formControlName="rememberMe" (change)="onRememberMeChanged($event)">
+                        {{'Login.label.rememberme' | translate}}
+                    </mat-checkbox>
+
+                    <a class="forgot-password" [routerLink]="'/forgot-password'">
+                        {{'Login.label.forgotcredential' | translate}}
+                    </a>
+                </div>
+
+                <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
+                    [disabled]="loginForm.invalid" (click)="login();">
+                    {{'Login.label.login' | translate}}
+                </button>
+
+            </form>
+
+            <div class="register" fxLayout="column" fxLayoutAlign="center center">
+                <span class="text">{{'Login.label.donothaveaccount' | translate}}</span>
+                <a class="link" [routerLink]="'/register'">{{'Login.label.create.account' | translate}}</a>
+            </div>
+
+            <ng-container *ngIf="supportedLanguages && supportedLanguages.length>1">
+                <div fxLayout="row" fxLayout.xs="column" fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+                    <button mat-flat-button *ngFor="let sl of supportedLanguages" 
+                            color="{{activeLanguage(sl.key)}}"
+                            (click)="switchLanguage(sl.key)">{{sl.label}}</button>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!supportedLanguages">
+                <div fxLayout="row" fxLayoutAlign="center">
+                    <mat-error>{{'Error.no.connect' | translate}}</mat-error>
+                </div>
+            </ng-container>
+
+        </div>
+
+    </div>
+
+</div>

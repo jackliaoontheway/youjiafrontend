@@ -1,0 +1,158 @@
+{
+    "Forgot": {
+        "password": {
+            "title": "找回密码",
+            "label.email": "邮件",
+            "label.send": "发送找回密码请求",
+            "link.login": "返回登录"
+        }
+    },
+    "Register": {
+        "label.name": "姓名",
+        "label.email": "邮件",
+        "label.password1": "密码",
+        "label.password2": "确认密码",
+        "label.create.account": "创建帐号",
+        "title": "填写帐号信息",
+        "info.term.check": "已读并接受",
+        "info.term": "开帐号规则和协议",
+        "info.already.account": "已经拥有系统帐号",
+        "link.login": "去登录"
+    },
+    "Login": {
+        "label.title": "登录系统",
+        "label.loginName": "邮箱",
+        "label.password": "密码",
+        "label.rememberme": "记住我",
+        "label.login": "登录 >",
+        "label.forgotcredential": "忘记密码？",
+        "label.wesupport": "我们支持：",
+        "label.donothaveaccount": "没有帐号??",
+        "label.create.account": "注册一个",
+        "error.required": "必填",
+        "error.email": "请输入注册时的邮件地址"
+    },
+    "ResetPassword": {
+        "title": "重设你的密码",
+        "label.loginName": "邮箱",
+        "label.password1": "密码",
+        "label.password2": "确认密码",
+        "label.reset.password": "设置我的密码",
+        "label.cancel": "取消",
+        "link.login": "返回登录"
+    },
+    "Coming-soon": {
+        "title": "嘿， 欢迎来到本网站",
+        "content": "网站暂时还没有上线，我们正在努力工作，离上线时间还剩：",
+        "subscribe-info": "如果你想得到及时上线通知，你可以订阅我们的上线通知邮件。",
+        "label.loginName": "电子邮件",
+        "label.subscribe": "订上线通知"
+    },
+    "Paginator": {
+        "items_per_page": "每页数据",
+        "first_page": "第一页",
+        "last_page": "最后一页",
+        "next_page": "下一页",
+        "previous_page": "上一页",
+        "of": " 共:",
+        "no_data": "没有数据"
+    },
+    "Model": {
+        "label.entity.detail": "详情",
+        "label.advanceSearch": "搜索条件",
+        "label.showHideField": "选择显示项",
+        "label.search": "搜索",
+        "label.clear": "清除条件",
+        "label.deleteSelectedEntities": "删除选择的数据",
+        "label.downloadSelectedEntities": "下载选择的数据",
+        "label.downloadAllEntities": "下载所有数据",
+        "label.uploadData": "上传数据",
+        "label.add": "新增",
+        "label.edit": "修改",
+        "label.delete": "删除",
+        "label.remove": "删除",
+        "label.clone": "复制",
+        "label.close": "关闭",
+        "label.detail": "详情",
+        "label.total": "共有记录",
+        "label.recordPerPage": "记录/页",
+        "label.goto": "直接去到",
+        "label.go": "Go",
+        "label.backToList": "返回列表",
+        "label.save": "保存",
+        "label.confirm": "确定",
+        "label.cancel": "取消",
+        "title.edit": "编辑",
+        "title.detail": "详情",
+        "title.add": "新增",
+        "title.fieldSelection": "选择需要显示的属性",
+        "label.saveSetting": "保存配置",
+        "label.ok": "OK",
+        "label.hide.advance": "隐藏搜索条件",
+        "label.show.advance": "显示搜索条件",
+        "label.add.box": "新增箱子",
+        "label.showColumns": "选择显示列",
+        "label.searchParams": "搜索参数"
+    },
+    "Error": {
+        "no.connect": "连接不到服务器",
+        "time.out": "长时间没有操作，请重新登录",
+        "form": {
+            "required": "项必须填写",
+            "invalid": "请输入一个合适的",
+            "not.match": "两个密码不匹配",
+            "minlength": "项最小长度为",
+            "maxlength": "项最大长度为",
+            "minVal": "项最小值为",
+            "maxVal": "项最大值为",
+            "email": "邮箱格式错误"
+        }
+    },
+    "UserOperation": {
+        "MyProfile": "个人资料",
+        "ChangePassword": "修改密码",
+        "Setting": "个人偏好",
+        "Logout": "离开系统"
+    },
+    "SAMPLE": {
+        "HELLO": "欢迎!"
+    },
+    "NAV": {
+        "APPLICATIONS": "应用",
+        "SAMPLE": {
+            "TITLE": "例子",
+            "BADGE": "15"
+        }
+    },
+    "Value": {
+        "true": "是",
+        "false": "否"
+    },
+    "App": {
+        "browserTitle": "基础系统",
+        "supportBy": "由Polarj提供支持",
+        "appName": "基础系统"
+    },
+    "Confirm": {
+        "title": {
+            "delete": "删除",
+            "save": "保存"
+        },
+        "content": {
+            "delete": "确认要删除吗？",
+            "save": "确认要保存吗？"
+        }
+    },
+    "http": {
+        "3XX": "与服务器的通讯出现问题，请联系技术部门",
+        "401": "连接错误，请稍后重新登录",
+        "403": "你无权访问该服务",
+        "404": "没有这个服务",
+        "4XX": "因为你的访问不符合服务器的要求，访问被拒绝",
+        "5XX": "服务器遇到问题，请联系技术部门",
+        "XXX": "其他网络问题，请联系技术部门"
+    },
+    "search-packinglist-nodata": "没有这个装箱单的信息",
+    "upload-file-success": "上传成功",
+    "upload-file-fail": "上传失败"
+}

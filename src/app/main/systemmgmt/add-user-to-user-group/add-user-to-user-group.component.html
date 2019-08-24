@@ -1,0 +1,18 @@
+<mat-toolbar matDialogTitle class="mat-accent m-0">
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+    <span class="title dialog-title">{{ modelTitle | translate }}</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-dialog-content class="p-24 pb-0 m-0">
+  <div style="margin-top:20px;min-height:120px">
+    <mat-form-field class="full-width-input">
+      <input matInput [formControl]="userAccountLoginNameInput" placeholder="LoginName">
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions style="float:right">
+  <button mat-raised-button color="accent" (click)="onSubmit()">{{'Model.label.add' | translate}}</button>
+  <button mat-raised-button color="accent" (click)="matDialogRef.close()" aria-label="Close dialog">
+    {{'Model.label.cancel' | translate}}</button>
+</mat-dialog-actions>

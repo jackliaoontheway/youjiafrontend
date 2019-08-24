@@ -1,0 +1,23 @@
+.card {
+    margin: 0 auto;
+    margin-top: 10%;
+    width: 500px;
+    height: 400px;
+}
+
+.example-full-width {
+    width: 100%;
+  }
+
+.number-div {
+    border:  1px dashed #ccc;
+    margin-top : 10px;
+    height: 80px;
+    align-items:center; 
+    display: -webkit-flex;
+}
+
+.number-span {
+    font-size:1.2em;
+    padding-left: 5px;
+}

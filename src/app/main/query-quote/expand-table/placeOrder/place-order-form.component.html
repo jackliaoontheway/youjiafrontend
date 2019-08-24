@@ -1,0 +1,43 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-0 m-0" fusePerfectScrollbar>
+        <ng-container *ngIf="disableSelect">
+            <h3>确认是否为该客户下单?</h3>
+        </ng-container>
+        <ng-container *ngIf="!disableSelect">
+            <h3>请选择下单客户</h3>
+        </ng-container>
+        <div fxLayout="row" fxLayoutAlign="start start">
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>选择客户</mat-label>
+                <mat-icon matSuffix class="secondary-text">transfer_within_a_station</mat-icon>
+                <input matInput placeholder="{{fSpec.label}}" [matAutocomplete]="auto" [formControl]="selectControls[fSpec.name]" [readonly]="disableSelect">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onAutoCompleteSelected(fSpec, $event)">
+                    <mat-option *ngFor="let item of filteredOptions[fSpec.name] | async" [value]="item.label">
+                        <span>{{item.label}}</span><span hidden>,{{item.value}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+        <button mat-button class="save-button" (click)="matDialogRef.close(['confirm', customerControl, entity])" [disabled]="selectControls[fSpec.name]?.invalid"
+                aria-label="SAVE">
+            {{ 'Model.label.confirm' | translate}}
+        </button>
+        <button mat-button class="mr-8" (click)="matDialogRef.close()" aria-label="Cancel" matTooltip="Cancel">
+            {{ 'Model.label.cancel' | translate}}
+        </button>
+    </div>
+
+</div>

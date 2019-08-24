@@ -1,0 +1,158 @@
+{
+    "Forgot": {
+        "password": {
+            "title": "RECOVER YOUR PASSWORD",
+            "label.email": "Email",
+            "label.send": "SEND RESET LINK",
+            "link.login": "Go back to login"
+        }
+    },
+    "Register": {
+        "label.name": "Name",
+        "label.email": "Email",
+        "label.password1": "Password",
+        "label.password2": "Password (Confirm)",
+        "label.create.account": "CREATE AN ACCOUNT",
+        "title": "CREATE AN ACCOUNT",
+        "info.term.check": "I read and accept",
+        "info.term": "terms and conditions",
+        "info.already.account": "Already have an account?",
+        "link.login": "Login"
+    },
+    "Login": {
+        "label.title": "LOGIN TO YOUR ACCOUNT",
+        "label.loginName": "Email",
+        "label.password": "Password",
+        "label.rememberme": "Remeber me",
+        "label.login": "Login >",
+        "label.forgotcredential": "Forgot Password?",
+        "label.wesupport": "We support:",
+        "label.donothaveaccount": "Don't have an account?",
+        "label.create.account": "Create an account",
+        "error.required": " is required",
+        "error.email": "Please enter a valid email address"
+    },
+    "ResetPassword": {
+        "title": "RESET YOUR PASSWORD",
+        "label.loginName": "Email",
+        "label.password1": "Password",
+        "label.password2": "Password (Confirm)",
+        "label.reset.password": "RESET MY PASSWORD",
+        "label.cancel": "Cancel",
+        "link.login": "Go back to login"
+    },
+    "Coming-soon": {
+        "title": "Hey! Thank you for checking out our app.",
+        "content": "It’s not quite ready yet, but we are working hard and it will be ready in approximately:",
+        "subscribe-info": "If you would like to be notified when the app is ready, you can subscribe to our e-mail list.",
+        "label.loginName": "Email",
+        "label.subscribe": "SUBSCRIBE"
+    },
+    "Paginator": {
+        "items_per_page": "Items per page",
+        "first_page": "First page",
+        "last_page": "Last page",
+        "next_page": "Next page",
+        "previous_page": "Previous page",
+        "of": "of",
+        "no_data": "No data"
+    },
+    "Model": {
+        "label.entity.detail": "Entity Detail",
+        "label.advanceSearch": "Advance Search",
+        "label.showHideField": "Show/Hide Field",
+        "label.search": "Search",
+        "label.clear": "Clear",
+        "label.deleteSelectedEntities": "Del Selected Records",
+        "label.downloadSelectedEntities": "Download Selected Records",
+        "label.downloadAllEntities": "Download All Records",
+        "label.uploadData": "Upload Data",
+        "label.add": "Add",
+        "label.edit": "Edit",
+        "label.delete": "Delete",
+        "label.remove": "Remove",
+        "label.clone": "Copy",
+        "label.close": "Close",
+        "label.detail": "Details",
+        "label.total": "Total Record",
+        "label.recordPerPage": "Records/Page",
+        "label.goto": "Goto",
+        "label.go": "Go",
+        "label.backToList": "Back To List",
+        "label.save": "Save",
+        "label.confirm": "Confirm",
+        "label.cancel": "Cancel",
+        "title.edit": "Edit",
+        "title.detail": "Detail",
+        "title.add": "Add",
+        "title.fieldSelection": "Select Fields",
+        "label.saveSetting": "Save Setting",
+        "label.ok": "OK",
+        "label.hide.advance": "Hide Advance",
+        "label.show.advance": "Show Advance",
+        "label.add.box": "Add Box",
+        "label.showColumns": "Display Columns",
+        "label.searchParams": "Search Params"
+    },
+    "Error": {
+        "no.connect": "Can not connect to Server.",
+        "time.out": "Not operation for long time, Please login again.",
+        "form": {
+            "required": "is required",
+            "invalid": "Please enter a valid",
+            "not.match": "Passwords must match",
+            "minlength": "minlength is",
+            "maxlength": "maxlength is",
+            "minVal": "minVal is",
+            "maxVal": "maxVal is",
+            "email": "email is wrong"
+        }
+    },
+    "UserOperation": {
+        "MyProfile": "My Profile",
+        "ChangePassword": "Change Password",
+        "Setting": "Setting",
+        "Logout": "Logout"
+    },
+    "SAMPLE": {
+        "HELLO": "Hello, World!"
+    },
+    "NAV": {
+        "APPLICATIONS": "Applications",
+        "SAMPLE": {
+            "TITLE": "Sample",
+            "BADGE": "25"
+        }
+    },
+    "Value": {
+        "true": "TRUE",
+        "false": "FALSE"
+    },
+    "App": {
+        "browserTitle": "base",
+        "supportBy": "Supportted By PolarJ",
+        "appName": "base"
+    },
+    "Confirm": {
+        "title": {
+            "delete": "Delete",
+            "save": "Save"
+        },
+        "content": {
+            "delete": "Are you sure you want to delete?",
+            "save": "Are you sure you want to save?"
+        }
+    },
+    "http": {
+        "3XX": "You have communication problem with server, should contact the IT department.",
+        "401": "Please login again to access system.",
+        "403": "You are not allowed to access this.",
+        "404": "Can not find this resource.",
+        "4XX": "You encounter issues, mostly because your action is not matching the server's requirement.",
+        "5XX": "Server has problems, should contact the IT department.",
+        "XXX": "Other problem, should contact the IT department."
+    },
+    "search-packinglist-nodata": "Cannot find this packing list number",
+    "upload-file-success": "Upload successfully",
+    "upload-file-fail": "Upload fail"
+}

@@ -1,0 +1,33 @@
+<mat-toolbar matDialogTitle class="mat-accent m-0">
+    <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="title dialog-title">{{ modelTitle | translate }}</span>
+        <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-dialog-content class="p-24 pb-0 m-0">
+  <div class="data-container">
+    <table mat-table [dataSource]="entities" [@animateStagger]="{value:'50'}">
+      <!-- 模型的数据项列 -->
+      <ng-container *ngFor="let fSpec of fieldSpecs" matColumnDef="{{fSpec.name}}">
+        <th mat-header-cell *matHeaderCellDef class="">
+          {{fSpec.label}}
+        </th>
+        <td mat-cell *matCellDef="let entity">
+          <p class="text-truncate">
+            {{getFieldValue(entity, fSpec)}}
+          </p>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay;"></tr>
+      <tr mat-row *matRowDef="let entity; columns: columnsToDisplay"></tr>
+    </table>
+  </div>
+</mat-dialog-content>
+
+<!--<mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">-->
+<!--  <button mat-button (click)="matDialogRef.close(false)">Cancel</button>-->
+<!--</mat-dialog-actions>-->

@@ -1,0 +1,16 @@
+<mat-card class="card">
+    <mat-form-field class="example-full-width">
+        <input matInput [formControl]="orderNumInput" autofocus #orderNumElm placeholder="P/L NO."
+        (keyup.enter)="onSearchKeyPress($event, orderNumElm);">
+    </mat-form-field>
+
+    <div class="number-div">
+        <span class="number-span">{{mawb}}</span>
+    </div>
+    <div class="number-div">
+        <span class="number-span">{{hawb}}</span>
+    </div>
+    <div class="number-div">
+        <span class="number-span">{{three8Number}}</span>
+    </div>
+</mat-card>

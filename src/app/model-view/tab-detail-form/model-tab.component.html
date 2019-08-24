@@ -1,0 +1,161 @@
+<div id="entityDeatails" class="page-layout carded fullwidth inner-scroll" *ngIf="entity">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+    <!-- CENTER -->
+    <div class="center">
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                <div class="h2"> {{modelFormTitle}} </div>
+            </div>
+            <ng-container *ngIf="actionString === 'detail'">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <button mat-button class="mr-16" *ngIf="modelSpec && modelSpec.deletable" (click)="onDeleteButton();">
+                        <mat-icon>delete</mat-icon>
+                        <span class="ml-16" fxHide fxShow.gt-xs>{{ 'Model.label.delete' | translate}}</span>
+                    </button>
+                    <button mat-button class="mr-16" *ngIf="modelSpec && modelSpec.updatable" (click)="actionString='edit'">
+                        <mat-icon>edit</mat-icon>
+                        <span class="ml-16" fxHide fxShow.gt-xs>{{ 'Model.label.edit' | translate}}</span>
+                    </button>
+                    <ng-container *ngIf="hasInstanceOperations() && (countFunction()<4)">
+                        <ng-container *ngFor="let fun of modelSpec.objectFunctionalities">
+                            <button mat-button class="mr-16" *ngIf="hasInstanceOperation(fun);" (click)="onInstanceFunction(fun, fileInput)">
+                                <mat-icon>{{fun.iconName}}</mat-icon>
+                                <span class="ml-16" fxHide fxShow.gt-xs>{{fun.label}}</span>
+                            </button>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="hasInstanceOperations() && (countFunction()>=4)">
+                        <ng-container *ngFor="let fun of onPageOperation">
+                            <button mat-button class="mr-16" *ngIf="hasInstanceOperation(fun);" (click)="onInstanceFunction(fun, fileInput)">
+                                <mat-icon>{{fun.iconName}}</mat-icon>
+                                <span class="ml-16" fxHide fxShow.gt-xs>{{fun.label}}</span>
+                            </button>
+                        </ng-container>
+                        <button mat-button class="mr-16" [matMenuTriggerFor]="otherMenu" aria-label="More" (click)="$event.stopPropagation();">
+                            <mat-icon class="secondary-text">more_horiz</mat-icon>
+                        </button>
+                        <mat-menu #otherMenu="matMenu">
+                            <ng-container *ngFor="let fun of underMenuOperation">
+                                <button mat-menu-item *ngIf="hasInstanceOperation(fun);" (click)="onInstanceFunction(fun, fileInput)">
+                                    <mat-icon>{{fun.iconName}}</mat-icon>
+                                    <span>{{fun.label}}</span>
+                                </button>
+                            </ng-container>
+                        </mat-menu>
+                    </ng-container>
+                    <button mat-button class="mr-16" (click)="onDetailClose()">
+                        <mat-icon>close</mat-icon>
+                        <span class="ml-16" fxHide fxShow.gt-xs>{{ 'Model.label.close' | translate}}</span>
+                    </button>
+                </div>
+                <input type="file" hidden ng2FileSelect multiple #fileInput [uploader]="fileUploader" (onFileSelected)="onFileSelected($event)" />
+            </ng-container>
+            <ng-container *ngIf="actionString !== 'detail'">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <button mat-button class="mr-16" (click)="onSaveButton()" [disabled]="!validForm">
+                        <mat-icon>save</mat-icon>
+                        <span class="ml-16" fxHide fxShow.gt-xs>{{ 'Model.label.save' | translate}}</span>
+                    </button>
+                    <button mat-button class="mr-16" (click)="onCloseOrCancel()">
+                        <mat-icon>close</mat-icon>
+                        <span class="ml-16" fxHide fxShow.gt-xs>{{ 'Model.label.cancel' | translate}}</span>
+                    </button>
+                </div>
+            </ng-container>
+            <!-- / APP TITLE -->
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" *ngIf="actionString === 'detail'">
+            <!-- CONTENT -->
+            <div class="content">
+                <mat-tab-group fxLayout="column" fxFlex>
+                    <mat-tab label="{{'Model.label.entity.detail' | translate}}">
+                        <div class="tab-content p-24" fusePerfectScrollbar>
+                            <field-detail [serviceUrl]="serviceUrl" [rowFieldSpecs]="viewFieldSpecs.normalFields"
+                                [entity]="entity" [entityId]="entity.id"></field-detail>
+                        </div>
+                    </mat-tab>
+                    <mat-tab *ngFor="let onefSpec of viewFieldSpecs.oneToOneNormalFields" label="{{onefSpec.parentFieldSpec.label}}">
+                        <div class="tab-content p-24" fusePerfectScrollbar>
+                            <field-detail [serviceUrl]="serviceUrl" [rowFieldSpecs]="onefSpec.normalFields" [entity]="entity[onefSpec.parentFieldSpec.name]" [entityId]="entity.id"></field-detail>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="{{manyfSpec.parentFieldSpec.label}}({{entity[manyfSpec.parentFieldSpec.name]?entity[manyfSpec.parentFieldSpec.name].length:0}})"
+                        *ngFor="let manyfSpec of viewFieldSpecs.oneToManyNormalFields">
+                        <div class="tab-content p-24" fusePerfectScrollbar>
+                            <mat-expansion-panel *ngFor="let subEntity of entity[manyfSpec.parentFieldSpec.name]" style="margin-bottom: 5px;">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>{{getTitleValue(subEntity, manyfSpec.parentFieldSpec)}}</mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <field-detail [serviceUrl]="serviceUrl" [rowFieldSpecs]="manyfSpec.normalFields"
+                                    [entity]="subEntity" [entityId]="entity.id"></field-detail>
+                            </mat-expansion-panel>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+
+        <!-- 编辑界面 -->
+        <div class="content-card" *ngIf="actionString !== 'detail'">
+            <div *ngIf="modelForm!=null" class="content">
+                <mat-tab-group fxLayout="column" fxFlex>
+                    <mat-tab label="{{'Model.label.entity.detail' | translate}}">
+                        <div class="tab-content p-24" fusePerfectScrollbar>
+                            <field-form [modelForm]="modelForm" [fieldSpecs]="fieldSpecs" [entity]="entity"
+                                (formValidChanged)="onFormValidChanged($event)"></field-form>
+                        </div>
+                    </mat-tab>
+                    <ng-container *ngFor="let fSpec of fieldSpecs">
+                        <mat-tab label="{{fSpec.label}}" *ngIf="!fSpec.autogenerated && !fSpec.embedded && fSpec.componentMetaDatas && fSpec.componentMetaDatas.length>0 && fSpec.dataType=='object'">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                                <field-form [modelForm]="modelForm.controls[fSpec.name]" [entity]="entity[fSpec.name]" [fieldSpecs]="fSpec.componentMetaDatas"
+                                    (formValidChanged)="onFormValidChanged($event)"></field-form>
+                            </div>
+                        </mat-tab>
+                    </ng-container>
+                    <ng-container *ngFor="let fSpec of fieldSpecs">
+                        <mat-tab label="{{fSpec.label}}" *ngIf="!fSpec.autogenerated && !fSpec.embedded && fSpec.componentMetaDatas && fSpec.componentMetaDatas.length>0 && fSpec.dataType=='array'">
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                                <div fxLayout="column" fxLayoutAlign="space-around stretch">
+                                    <div fxLayout="row" fxLayoutAlign="end center">
+                                        <button mat-button class="mb-16" (click)="addNewItem(fSpec);">
+                                            <mat-icon>add</mat-icon>
+                                            <span class="ml-16">{{ 'Model.label.add' | translate}}</span>
+                                        </button>
+                                    </div>
+                                    <mat-accordion [multi]='true'>
+                                        <mat-expansion-panel [expanded]="true" *ngFor="let subFormGroup of modelForm.controls[fSpec.name].controls; index as i"  style="margin-bottom: 5px;">
+                                            <mat-expansion-panel-header>
+                                                <mat-panel-title>{{fSpec.label}}</mat-panel-title>
+                                            </mat-expansion-panel-header>
+                                            <field-form [modelForm]="subFormGroup" [entity]="entity[fSpec.name]?entity[fSpec.name][i]:null" [fieldSpecs]="fSpec.componentMetaDatas"
+                                                (formValidChanged)="onFormValidChanged($event)"></field-form>
+                                            <mat-action-row>
+                                                <button mat-button class="mr-16" (click)="onRemoveButtonClick(modelForm.controls[fSpec.name], i)">
+                                                    <mat-icon>delete</mat-icon>
+                                                    {{ 'Model.label.remove' | translate}}
+                                                </button>
+                                            </mat-action-row>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </ng-container>
+                </mat-tab-group>
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+</div>

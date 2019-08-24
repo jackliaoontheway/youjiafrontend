@@ -1,0 +1,48 @@
+.data-container {
+    width: 100%;
+}
+.mat-table {
+    background: transparent;
+    box-shadow: none;
+    width: 100%;
+
+    .mat-column-buttons {
+        flex: 0 1 64px;
+        width: 64px;
+        padding-left: 12px;
+    }
+
+    .mat-column-checkbox {
+        flex: 0 1 64px;
+    }
+
+    .mat-cell {
+        min-width: 20px;
+        white-space: nowrap;
+    }
+
+    .mat-header-cell {
+        min-width: 20px;
+        padding-left: 8px;
+        white-space: nowrap;
+    }
+
+    .mat-row {
+        position: relative;
+        cursor: pointer;
+        padding: 8px;
+
+        .mat-cell {
+            min-width: 20px;
+            padding-left: 8px;
+        }
+    }
+
+    .text-truncate {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        white-space: nowrap;
+    }
+}

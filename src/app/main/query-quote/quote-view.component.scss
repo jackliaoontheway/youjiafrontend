@@ -1,0 +1,94 @@
+@import "src/@fuse/scss/fuse";
+
+#quotepage {
+
+    .header {
+        height: 60px;
+        min-height: 60px;
+        .search-wrapper {
+            width: 100%;
+            background: #ffffff;
+            min-width: 220px;
+            max-width: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            @include mat-elevation(1);
+
+            .search {
+                width: 100%;
+                height: 32px;
+                line-height: 32px;
+                padding: 0 8px;
+                .mat-icon {
+                    color: rgba(0, 0, 0, 0.55);
+                    cursor: pointer;
+                }
+                input {
+                    width: 100%;
+                    height: 32px;
+                    min-height: 32px;
+                    max-height: 32px;
+                    padding: 0 6px;
+                    border: none;
+                    outline: none;
+                }
+            }
+        }
+        .logo {
+            min-width: 80px;
+        }
+    }
+
+    .model-content {
+        overflow: auto;
+        height: 100%;
+        min-height: 400px;
+        padding-bottom: 5px!important;
+    }
+
+    .model-tab-content{
+      .data-container {
+        max-height: calc(100vh - 270px);
+        overflow: auto;
+      }
+    }
+
+	//mat-form-field.mat-form-field {
+	//	font-size: 14px;
+	//}
+    //
+    //.advanceSearch{
+    //    border-radius: 4px;
+    //    background: #fff;
+    //    margin: 5px 16px 5px 16px!important;
+    //    box-shadow: 2px 0px 6px -2px rgba(0, 0, 0, 0.14), 0px 1px 2px 0px rgba(0, 0, 0, 0.14), 0px 0px 2px 1px rgba(0, 0, 0, 0.12);
+    //}
+    //.searchBtn{
+    //    margin-left: 5px;
+    //    margin-top: 10px;
+    //}
+    //
+    //.example-ripple-checkbox {
+    //    margin: 6px 12px 6px 0;
+    //}
+    //
+    //.example-ripple-form-field {
+    //    margin: 5px 10px -15px 10px;
+    //    //min-width: 200px;
+    //}
+    //
+    //.example-ripple-formd{
+    //    margin: 5px 10px 10px 10px;
+    //    max-width: 480px;
+    //    display: inline-block!important;
+    //    border-radius: 4px;
+    //    background: #fff;
+    //    padding: 5px;
+    //    box-shadow: 2px 0px 6px -2px rgba(0, 0, 0, 0.14), 0px 1px 2px 0px rgba(0, 0, 0, 0.14), 0px 0px 2px 1px rgba(0, 0, 0, 0.12);
+    //}
+    //
+    //.form-inline{
+    //    display: inline-block!important;
+    //}
+
+}
