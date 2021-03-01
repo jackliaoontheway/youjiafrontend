@@ -62,7 +62,7 @@
     "ngx-filesaver": "^2.1.1",
     "ngx-loading": "^3.0.1",
     "perfect-scrollbar": "1.4.0",
-    "prismjs": "1.15.0",
+    "prismjs": "1.23.0",
     "rxjs": "6.5.2",
     "rxjs-compat": "6.3.3",
     "web-animations-js": "^2.3.2",
